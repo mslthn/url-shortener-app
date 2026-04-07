@@ -5,7 +5,7 @@ create table if not exists "users" (
     "description" varchar(255),
     "password_hash" varchar(255) not null,
     "created_at" timestamp default now()
-)
+);
 
 create table if not exists "links" (
     "id" serial primary key,
@@ -15,5 +15,4 @@ create table if not exists "links" (
     "created_at" timestamp default now(),
     "deleted_at" timestamp,
     "click_count" integer DEFAULT 0
-
-)
+);

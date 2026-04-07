@@ -2,7 +2,7 @@ create table if not exists "users" (
     "id" serial primary key,
     "email" varchar(255) unique not null,
     "fullname" varchar(255),
-    "description" varchar(255),
+    "profession" varchar(255),
     "password_hash" varchar(255) not null,
     "created_at" timestamp default now()
 );

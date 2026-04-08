@@ -54,7 +54,7 @@ const RegisterPage = () => {
             }
 
             alert("Registration successful! Please login.")
-            navigate("/login")
+            navigate("/auth/login")
         } catch (error) {
             console.error("Registration failed", error)
             setError(error.message)
@@ -145,7 +145,7 @@ const RegisterPage = () => {
             <p className="mt-8 text-sm text-slate-600">
                 Already have an account?{" "}
                 <button 
-                    onClick={() => navigate("/login")} 
+                    onClick={() => navigate("/auth/login")} 
                     className="text-blue-600 font-semibold hover:underline"
                 >
                     Log in

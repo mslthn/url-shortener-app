@@ -7,12 +7,11 @@ import {Navigate, useNavigate} from "react-router-dom"
 const LandingPage = () => {
     const navigate = useNavigate()
 
-    function toLoginPage() {
-        navigate("/login")
+    const toLoginPage = () => {
+        navigate('/login')
     }
-
-    function toRegisterPage() {
-        navigate("/register")
+    const toRegisterPage = () => {
+        navigate('/register')
     }
 
     return (
@@ -23,13 +22,13 @@ const LandingPage = () => {
                 <div className="flex flex-row gap-10">
                     <Button 
                         variant="blue"
-                        onClick={ toLoginPage }
+                        onClick={() => navigate("/createLink")}
                     >
                         Get Started
                     </Button>
                     <Button 
                         variant="white"
-                        onClick={ toRegisterPage }
+                        onClick={() => navigate("/")}
                     >
                         Learn More
                     </Button>

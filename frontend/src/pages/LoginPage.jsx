@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { FiEye } from "react-icons/fi";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
@@ -9,17 +9,40 @@ const LoginPage = () => {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
 
     const handleLogin = async (e) => {
         e.preventDefault()
         setIsLoading(true)
+        setError("") 
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 2000))
+            const response = await fetch("http://localhost:8888/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            })
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.error || "Login failed")
+            }
+
+            localStorage.setItem("token", result.data.token)
 
             navigate("/dashboard")
         } catch (error) {
             console.error("Login failed", error)
+            setError(error.message)
         } finally {
             setIsLoading(false)
         }
@@ -37,15 +60,23 @@ const LoginPage = () => {
                     <p className="text-sm text-gray-500">Please enter your details to sign in.</p>
                 </div>
 
+                {error && (
+                    <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+                        {error}
+                    </div>
+                )}
+
                 <form onSubmit={handleLogin}>
                     <Input
                         label="Email Address"
                         type="email"
                         placeholder="name@company.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
 
-                    <div className="relative">
+                    <div className="relative mt-4">
                         <div className="flex justify-between items-center mb-1">
                             <label className="text-sm font-semibold text-slate-600">Password</label>
                             <a href="#" className="text-xs font-semibold text-blue-600 hover:underline">
@@ -56,21 +87,23 @@ const LoginPage = () => {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
                                 required
                             />
-                            <Button
+                            <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                             >
-                                <FiEye size={18} />
-                            </Button>
+                                {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                            </button>
                         </div>
                     </div>
 
                     <div className="mt-6">
-                        <Button type="submit" variant="blue" isLoading={isLoading}>
+                        <Button type="submit" variant="blue" isLoading={isLoading} className="w-full">
                             Log In
                         </Button>
                     </div>
@@ -98,12 +131,12 @@ const LoginPage = () => {
 
             <p className="mt-8 text-sm text-slate-600">
                 Don't have an account?{" "}
-                <Button
+                <button
                     onClick={() => navigate("/register")}
                     className="text-blue-600 font-semibold hover:underline"
                 >
                     Sign up
-                </Button>
+                </button>
             </p>
         </div>
     )

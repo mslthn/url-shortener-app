@@ -6,15 +6,24 @@ import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
 import UserContext from './components/context/UserContext';
 import Layout from './layout/MainLayout';
+import Dashboard from './pages/Dashboard';
+import CreateLinkPage from './pages/CreateLinkPage';
+import AuthLayout from './layout/AuthLayout';
 
 const router = createBrowserRouter([
   {
-    path: 'register',
-    element: <RegisterPage />
-  },
-  {
-    path: 'login',
-    element: <LoginPage />
+    path: '/auth',
+    element: <AuthLayout />,
+    children: [
+      {
+        path: 'register',
+        element: <RegisterPage />
+      },
+      {
+        path: 'login',
+        element: <LoginPage />
+      },
+    ]
   },
   {
     path: '/',
@@ -23,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <LandingPage />
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />
+      },
+      {
+        path: "/createLink",
+        element: <CreateLinkPage />
       },
     ],
   },
@@ -36,9 +53,9 @@ function App() {
   })
 
   return (
-      <UserContext value={user}>
-        <RouterProvider router={router} />
-      </UserContext>
+    <UserContext value={user}>
+      <RouterProvider router={router} />
+    </UserContext>
   )
 }
 

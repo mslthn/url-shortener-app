@@ -18,11 +18,11 @@ const LandingPage = () => {
         <div className="bg-blue-100/80 min-h-2/4 flex flex-col gap-10">
             <div className="bg-white/50 rounded-xl flex flex-col justify-center items-center gap-5 mt-30 mx-10 p-10 h-3/4">
                 <h1 className="text-7xl font-extrabold">Shorten URLs. <span className="text-blue-700">Share Easily.</span></h1>
-                <p className="text-2xl w-3xl text-center">Create short, memorable links for your team communications. Transform long, cumbersome URLs into powerful digital assets that drive engagement.</p>
+                <p className="text-2xl w-full text-center md, sm:text-xl w-full">Create short, memorable links for your team communications. Transform long, cumbersome URLs into powerful digital assets that drive engagement.</p>
                 <div className="flex flex-row gap-10">
                     <Button 
                         variant="blue"
-                        onClick={() => navigate("/createLink")}
+                        onClick={() => navigate("/create-link")}
                     >
                         Get Started
                     </Button>

@@ -1,10 +1,8 @@
-import { createBrowserRouter, RouterProvider, BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
-import UserContext from './components/context/UserContext';
 import Dashboard from './pages/Dashboard';
 import CreateLinkPage from './pages/CreateLinkPage';
 import ProfilePage from './pages/ProfilePage';

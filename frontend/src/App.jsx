@@ -1,62 +1,41 @@
-import { createBrowserRouter, RouterProvider, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
 import UserContext from './components/context/UserContext';
-import Layout from './layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import CreateLinkPage from './pages/CreateLinkPage';
-import AuthLayout from './layout/AuthLayout';
+import ProfilePage from './pages/ProfilePage';
+import NotFoundPage from './pages/NotFounPage';
+import NavigationBar from './components/NavigationBar';
+import ProtectedRoute from './components/ProtectedRoute';
 
-const router = createBrowserRouter([
-  {
-    path: '/auth',
-    element: <AuthLayout />,
-    children: [
-      {
-        path: 'register',
-        element: <RegisterPage />
-      },
-      {
-        path: 'login',
-        element: <LoginPage />
-      },
-    ]
-  },
-  {
-    path: '/',
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <LandingPage />
-      },
-      {
-        path: "/dashboard",
-        element: <Dashboard />
-      },
-      {
-        path: "/createLink",
-        element: <CreateLinkPage />
-      },
-    ],
-  },
-])
 
-function App() {
-  const [user, setUser] = useState(null)
+const App = () => {
+    return (
+        <BrowserRouter>
+            <NavigationBar/>
+            <div className="pt-16">
+                <Routes>
+                  {/* publik */}
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/auth/login" element={<LoginPage />} />
+                    <Route path="/auth/register" element={<RegisterPage />} />
 
-  useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("loggedinInUser")) || null)
-  })
+                  {/* user login */}
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/create-link" element={<CreateLinkPage />} />
+                        <Route path="/profile-page" element={<ProfilePage />} />
+                    </Route>
 
-  return (
-    <UserContext value={user}>
-      <RouterProvider router={router} />
-    </UserContext>
-  )
+                    <Route path="*" element={<NotFoundPage/>} />
+                </Routes>
+            </div>
+        </BrowserRouter>
+    )
 }
 
 export default App

@@ -1,39 +1,63 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
+import UserContext from './components/context/UserContext';
+import Layout from './layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import CreateLinkPage from './pages/CreateLinkPage';
+import AuthLayout from './layout/AuthLayout';
 import ProfilePage from './pages/ProfilePage';
-import NotFoundPage from './pages/NotFounPage';
-import NavigationBar from './components/NavigationBar';
 import ProtectedRoute from './components/ProtectedRoute';
 
+const router = createBrowserRouter([
+  {
+    path: '/auth',
+    element: <AuthLayout />, 
+    children: [
+      { path: 'register', element: <RegisterPage /> },
+      { path: 'login', element: <LoginPage /> },
+    ]
+  },
+  {
+    path: '/',
+    element: <Layout />, 
+    children: [
+      { path: '/', element: <LandingPage /> },
+    ],
+  },
+  {
+    element: <ProtectedRoute />, 
+    children: [
+      {
+        element: <Layout />,
+        children: [
+          { path: "/dashboard", element: <Dashboard /> },
+          { path: "/create-link", element: <CreateLinkPage /> },
+          { path: "/profile-page", element: <ProfilePage /> }
+        ]
+      }
+    ]
+  }
+]);
 
-const App = () => {
-    return (
-        <BrowserRouter>
-            <NavigationBar/>
-            <div className="pt-16">
-                <Routes>
-                  {/* publik */}
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/auth/login" element={<LoginPage />} />
-                    <Route path="/auth/register" element={<RegisterPage />} />
+function App() {
+  const [user, setUser] = useState(null);
 
-                  {/* user login */}
-                    <Route element={<ProtectedRoute/>}>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/create-link" element={<CreateLinkPage />} />
-                        <Route path="/profile-page" element={<ProfilePage />} />
-                    </Route>
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("loggedinInUser");
+    if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser));
+    }
+  }, []);
 
-                    <Route path="*" element={<NotFoundPage/>} />
-                </Routes>
-            </div>
-        </BrowserRouter>
-    )
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      <RouterProvider router={router} />
+    </UserContext.Provider>
+  );
 }
 
-export default App
+export default App;

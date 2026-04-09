@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { FiBarChart2 } from "react-icons/fi";
+import { authorizedFetch } from "../utils/api";
 
 const Dashboard = () => {
     const [links, setLinks] = useState([])
@@ -22,13 +23,16 @@ const Dashboard = () => {
     const fetchLinks = async () => {
         setIsLoading(true)
         try {
-            const token = localStorage.getItem("token")
-            const response = await fetch(`http://localhost:8888/api/v1/links?page=${page}&search=${search}`, {
-                headers: { "Authorization": `Bearer ${token}` }
-            })
-            const result = await response.json()
+            const response = await authorizedFetch("http://localhost:8888/api/v1/links?page=${page}&search=${search}")
+            // const token = localStorage.getItem("token")
+            // const response = await fetch(`http://localhost:8888/api/v1/links?page=${page}&search=${search}`, {
+            //     headers: { "Authorization": `Bearer ${token}` }
+            // })
             if (response.ok) {
-                setLinks(result.data)
+                const result = await response.json()
+                const fetchedLinks = result.data || []
+
+                setLinks(fetchedLinks)
                 setTotalActive(result.total_count || result.data.length) 
                 setTotalPages(result.total_pages || 1)
             }
